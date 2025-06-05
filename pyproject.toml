@@ -1,0 +1,11 @@
+[tool.skizze]
+adaptive_block = 51
+adaptive_c = 10
+min_line_len = 50.0
+hough_threshold = 100
+ms_block = 51
+ms_offset = 10
+ms_levels = 3
+scikit_block = 51
+scikit_offset = 10
+kmeans_clusters = 3
