@@ -5,7 +5,6 @@ from pathlib import Path
 import venv
 import hashlib
 import logging
-import requests
 
 # 12.1 Virtual environment
 def ensure_venv():
@@ -62,6 +61,7 @@ def download_model_if_missing(model_url: str, save_path: str, expected_sha256: s
             path.unlink()
         else:
             return
+    import requests
     print(f"🔽 Downloading model from '{model_url}' → '{path}'")
     response = requests.get(model_url, stream=True)
     response.raise_for_status()
