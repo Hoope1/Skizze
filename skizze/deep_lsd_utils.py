@@ -2,7 +2,10 @@ import numpy as np
 import cv2
 try:
     from scipy.ndimage import gaussian_filter
+k7xps3-codex/fehler-im-code-suchen-und-korrigieren
 except ImportError:  # optional dependency
+except Exception:  # pragma: no cover - optional dependency
+main
     def gaussian_filter(arr, sigma=1.0):
         return cv2.GaussianBlur(arr, (0, 0), sigma)
 
