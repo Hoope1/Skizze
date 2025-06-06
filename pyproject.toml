@@ -1,11 +1,29 @@
+[project]
+name = "skizze"
+version = "0.1.0"
+description = "Create high‑quality line art from any image."
+authors = ["Your Name <you@example.com>"]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "opencv-python",
+  "scikit-image",
+  "onnxruntime",
+  "torch",
+  "requests",
+  "toml"
+]
+
 [tool.skizze]
 adaptive_block = 51
 adaptive_c = 10
-min_line_len = 50.0
-hough_threshold = 100
 ms_block = 51
 ms_offset = 10
 ms_levels = 3
-scikit_block = 51
-scikit_offset = 10
-kmeans_clusters = 3
+filter_min_length = 50.0
+min_small_size = 64
+denoise_method = ""
+conf_th = 0.7
+device = ""
