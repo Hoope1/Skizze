@@ -1,14 +1,22 @@
-import argparse, sys, logging, os, numpy as np, cv2, torch
+import sys
 from pathlib import Path
+
 from .utils import ensure_venv, install_missing_packages, REQUIRED_PACKAGES, setup_logging
+
+ensure_venv()
+install_missing_packages(REQUIRED_PACKAGES)
+
+import argparse
+import logging
+import os
+import numpy as np
+import cv2
+import torch
 from .config import load_config_from_pyproject
 from .preprocessing import load_image, to_grayscale, denoise_image, morphological_opening, morphological_closing
 from .thresholding import auto_threshold_otsu, adaptive_threshold
 from .drawing import draw_lines_on_blank, combine_line_images
 from .line_detection import detect_edges_canny, detect_lines_hough, filter_lines_by_length
-
-ensure_venv()
-install_missing_packages(REQUIRED_PACKAGES)
 setup_logging()
 log = logging.getLogger(__name__)
 cfg = load_config_from_pyproject()
