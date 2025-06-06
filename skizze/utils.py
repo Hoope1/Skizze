@@ -1,6 +1,7 @@
 import os
 import sys
 import subprocess
+import importlib
 from pathlib import Path
 import venv
 import hashlib
@@ -30,12 +31,18 @@ REQUIRED_PACKAGES = [
 ]
 
 def install_missing_packages(packages):
+    pkg_map = {
+        "opencv-python": "cv2",
+        "scikit-image": "skimage",
+    }
     for pkg in packages:
+        module_name = pkg_map.get(pkg, pkg)
         try:
-            __import__(pkg)
+            importlib.import_module(module_name)
         except ImportError:
             print(f"📦 Package '{pkg}' missing. Installing …")
             subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+            importlib.import_module(module_name)
 
 # 12.3 SHA256 verification
 def verify_checksum(file_path: str, expected_sha256: str) -> bool:

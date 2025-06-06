@@ -1,8 +1,9 @@
 # Skizze
 
 Skizze is a modular Python pipeline that converts images to clean line drawings.
-It automatically sets up a virtual environment, installs dependencies, and
-supports classic OpenCV as well as DeepLSD (ONNX) and F‑Clip (PyTorch).
+On first run it creates a virtual environment and installs any missing
+dependencies automatically. The toolkit supports classic OpenCV as well as
+DeepLSD (ONNX) and F‑Clip (PyTorch).
 
 ```bash
 # quick start
