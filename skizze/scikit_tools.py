@@ -1,3 +1,4 @@
+import logging
 import numpy as np
 try:
     from skimage.morphology import remove_small_objects, remove_small_holes, skeletonize
@@ -5,9 +6,11 @@ try:
 except ImportError:
     _SK_IMG = False
 
+logger = logging.getLogger(__name__)
+
 def skeletonize_image(image_bin: np.ndarray):
     if not _SK_IMG:
-        print("⚠️ skimage not available: skipping skeletonize.")
+        logger.warning("skimage not available: skipping skeletonize.")
         return image_bin
     skel = skeletonize((image_bin>0))
     return (skel.astype(np.uint8)*255)
