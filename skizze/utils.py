@@ -1,11 +1,13 @@
 import os
 import sys
 import subprocess
+import importlib
 from pathlib import Path
 import venv
 import hashlib
 import logging
-import requests
+
+logger = logging.getLogger(__name__)
 
 # 12.1 Virtual environment
 def ensure_venv():
@@ -14,7 +16,7 @@ def ensure_venv():
     if str(sys.prefix).startswith(str(venv_dir)):
         return
     if not venv_dir.exists():
-        print("🔧 Creating virtual environment in './env' …")
+        logger.info("🔧 Creating virtual environment in './env' …")
         venv.EnvBuilder(with_pip=True).create(str(venv_dir))
     python_exe = venv_dir / ("Scripts" if os.name == "nt" else "bin") / ("python.exe" if os.name == "nt" else "python")
     os.execv(str(python_exe), [str(python_exe)] + sys.argv)
@@ -31,12 +33,18 @@ REQUIRED_PACKAGES = [
 ]
 
 def install_missing_packages(packages):
+    pkg_map = {
+        "opencv-python": "cv2",
+        "scikit-image": "skimage",
+    }
     for pkg in packages:
+        module_name = pkg_map.get(pkg, pkg)
         try:
-            __import__(pkg)
+            importlib.import_module(module_name)
         except ImportError:
-            print(f"📦 Package '{pkg}' missing. Installing …")
+            logger.info("📦 Package '%s' missing. Installing …", pkg)
             subprocess.check_call([sys.executable, "-m", "pip", "install", pkg])
+            importlib.import_module(module_name)
 
 # 12.3 SHA256 verification
 def verify_checksum(file_path: str, expected_sha256: str) -> bool:
@@ -55,14 +63,15 @@ def download_model_if_missing(model_url: str, save_path: str, expected_sha256: s
         path = model_dir / path.name
     if path.exists():
         if expected_sha256 and verify_checksum(str(path), expected_sha256):
-            print(f"✅ Checksum ok for '{path}'.")
+            logger.info("✅ Checksum ok for '%s'.", path)
             return
         elif expected_sha256:
-            print(f"❌ Checksum mismatch for '{path}'. Re‑downloading.")
+            logger.warning("❌ Checksum mismatch for '%s'. Re-downloading.", path)
             path.unlink()
         else:
             return
-    print(f"🔽 Downloading model from '{model_url}' → '{path}'")
+    import requests
+    logger.info("🔽 Downloading model from '%s' → '%s'", model_url, path)
     response = requests.get(model_url, stream=True)
     response.raise_for_status()
     with open(path, "wb") as f:
@@ -76,6 +85,6 @@ def setup_logging(level: str = "INFO", log_file: str = None):
     fmt = "%(asctime)s [%(levelname)s] %(message)s"
     numeric = getattr(logging, level.upper(), logging.INFO)
     if log_file:
-        logging.basicConfig(level=numeric, format=fmt, filename=log_file, filemode="a")
+        logging.basicConfig(level=numeric, format=fmt, filename=log_file, filemode="a", force=True)
     else:
-        logging.basicConfig(level=numeric, format=fmt)
+        logging.basicConfig(level=numeric, format=fmt, force=True)

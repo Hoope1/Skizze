@@ -1,6 +1,10 @@
 import numpy as np
 import cv2
-from scipy.ndimage import gaussian_filter
+try:
+    from scipy.ndimage import gaussian_filter
+except ImportError:  # optional dependency
+    def gaussian_filter(arr, sigma=1.0):
+        return cv2.GaussianBlur(arr, (0, 0), sigma)
 
 def postprocess_attraction_field(attr_field: np.ndarray, orig_h:int, orig_w:int, conf_th:float=0.7):
     g0 = gaussian_filter(attr_field[0], sigma=1.0)
