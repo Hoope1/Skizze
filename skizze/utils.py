@@ -6,8 +6,10 @@ from pathlib import Path
 import venv
 import hashlib
 import logging
+1h5up9-codex/fehler-im-code-suchen-und-korrigieren
 
 logger = logging.getLogger(__name__)
+main
 
 # 12.1 Virtual environment
 def ensure_venv():
@@ -71,7 +73,10 @@ def download_model_if_missing(model_url: str, save_path: str, expected_sha256: s
         else:
             return
     import requests
+ 1h5up9-codex/fehler-im-code-suchen-und-korrigieren
     logger.info("🔽 Downloading model from '%s' → '%s'", model_url, path)
+    print(f"🔽 Downloading model from '{model_url}' → '{path}'")
+ main
     response = requests.get(model_url, stream=True)
     response.raise_for_status()
     with open(path, "wb") as f:
